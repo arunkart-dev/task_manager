@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/todo.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -38,6 +39,36 @@ class _HomeState extends State<Home> {
             )
             .toList();
     return Scaffold(
+      drawer: Drawer(
+        backgroundColor: const Color.fromARGB(255, 165, 198, 225),
+        elevation: 3.0,
+        shadowColor: Colors.black,
+        child: ListView(
+          padding: EdgeInsets.all(10.0),
+          children: [
+            ClipPath(
+              clipper:CurvedHeaderClipper() ,
+              child: DrawerHeader(
+                curve: Curves.bounceIn,
+                decoration: BoxDecoration(
+                  color: Colors.yellow
+                ),
+                child: Text('Drawer',style: TextStyle(fontSize: 25.0),),
+                ),
+            ),
+            ListTile(
+              shape: BeveledRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)
+              ),
+              tileColor: Colors.amber,
+              title: Text('Todo list',style: TextStyle(color: Colors.black),),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Todo()));
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text('Task Manager'),
@@ -106,7 +137,9 @@ class _HomeState extends State<Home> {
                                   vertical: 4,
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                  ),
                                   child: ListTile(
                                     title: Text(
                                       task,
@@ -176,4 +209,22 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+}
+
+class CurvedHeaderClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(0, size.height - 30); // left
+    path.quadraticBezierTo(
+      size.width / 2, size.height,
+      size.width, size.height - 30,
+    ); // curve
+    path.lineTo(size.width, 0); // right
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
